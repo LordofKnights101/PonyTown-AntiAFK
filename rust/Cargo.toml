@@ -1,0 +1,24 @@
+[package]
+name = "pony-antiafk"
+version = "0.1.0"
+edition = "2021"
+description = "Pony Town Anti-AFK - Rust port with an embedded WebView2 game view (iced + wry)"
+
+[dependencies]
+iced = { version = "0.13.1", default-features = false, features = ["tiny-skia", "tokio"] }
+wry = "0.57"
+raw-window-handle = "0.6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rand = "0.8"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_HiDpi",
+    "Win32_System_SystemInformation",
+] }
+
+[profile.release]
+opt-level = 2

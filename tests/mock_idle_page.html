@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mock Pony Town</title>
+<style>
+  body { background: #223; color: #dde; font-family: sans-serif; }
+  canvas { border: 1px solid #556; background: #4a5; display: block; margin: 20px; }
+  #status { font-size: 22px; margin: 10px 20px; }
+</style>
+</head>
+<body>
+<!-- Stand-in for pony.town used by the automated test: it disconnects
+     "the player" after 20 s without any trusted (real) input event. -->
+<canvas id="canvas" width="640" height="400"></canvas>
+<div id="status">connected</div>
+<script>
+window.__mock = { trusted: 0, untrusted: 0, lastTrusted: 0,
+                  disconnected: false, reconnects: 0 };
+
+function mark(e) {
+  if (e.isTrusted) { window.__mock.trusted++; window.__mock.lastTrusted = Date.now(); }
+  else { window.__mock.untrusted++; }
+}
+['keydown', 'keyup', 'mousedown', 'mousemove'].forEach(function (t) {
+  window.addEventListener(t, mark, true);
+});
+
+var IDLE_MS = 20000, timer = null;
+function disconnect() {
+  window.__mock.disconnected = true;
+  document.getElementById('status').textContent = 'DISCONNECTED (idle)';
+  document.title = 'DISCONNECTED';
+}
+function arm() {
+  clearTimeout(timer);
+  timer = setTimeout(disconnect, IDLE_MS);
+}
+['keydown', 'mousemove'].forEach(function (t) {
+  window.addEventListener(t, function (e) { if (e.isTrusted) arm(); }, true);
+});
+arm();
+</script>
+</body>
+</html>

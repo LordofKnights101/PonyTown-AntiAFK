@@ -1,0 +1,10 @@
+# runtime data
+profile/
+settings.json
+__pycache__/
+*.pyc
+
+# rust edition
+rust/target/
+rust/webview-data/
+rust/settings.json
